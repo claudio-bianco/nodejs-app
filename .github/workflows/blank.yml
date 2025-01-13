@@ -1,25 +1,55 @@
-name: Node Github CI
+name: Node.js CI/CD
 
 on:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
+
+workflow_dispatch:
 
 jobs:
-  test:
 
+  build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install and test
-      run: |
-        npm install
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      # - name: Run tests
+      #   run: npm test
+
+      # - name: Build project
+      #   run: npm run build
+
+      # - name: Upload build artifacts
+      #   if: success()
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: build
+      #     path: build/  # Adjust the path to your build output directory if different
+
+      # - name: Add SSH key
+      #   uses: webfactory/ssh-agent@v0.8.1
+      #   with:
+      #     ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # - name: Upload to remote server
+      #   run: scp -r build/ user@yourserver:/path/to/destination
+      #   env:
+      #     SSH_KNOWN_HOSTS: ${{ secrets.SSH_HOST }}
