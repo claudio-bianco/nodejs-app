@@ -1,34 +1,16 @@
 {
-    "name": "node-image-app",
-    "version": "1.0.0",
-    "description": "Node.js on Docker",
-    "author": "Claudio Bianco <sammy@example.com>",
-    "license": "MIT",
-    "main": "server.js",
-    "scripts": {
-        "start": "node ./src/server.js",
-        "test":  "jest --coverage"
-    },
-    "jest": {
-        "testEnvironment":  "node",
-        "coveragePathIgnorePatterns": [
-            "/node_modules/"
-        ],
-        "testResultsProcessor":  "jest-sonar-reporter"
-    },
-    "jestSonar": {
-        "reportPath":  "coverage",
-        "reportFile":  "test-reporter.xml",
-        "indent":  4
-    },
-    "keywords": [
-        "nodejs",
-        "bootstrap",
-        "express"
-    ],
-    "dependencies": {
-        "express": "^4.16.1",
-        "jest": "^27.5.1",
-        "supertest": "^6.2.2"
-    }
+  "name": "modelo",
+  "version": "1.0.0",
+  "description": "npm init -y",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
