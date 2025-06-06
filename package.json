@@ -4,7 +4,6 @@
   "description": "npm init -y",
   "main": "app.js",
   "scripts": {
-    "start": "node app",
     "test": "jest"
   },
   "keywords": [],
