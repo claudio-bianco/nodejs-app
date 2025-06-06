@@ -1,6 +1,5 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+const request = require('supertest');
+const app = require('../src/index');
 
 let server;
 
@@ -15,17 +14,21 @@ afterAll((done) => {
   server.close(done); // Clean up after tests
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+describe('GET /', () => {
+  it('should return 200 OK', async () => {
+    const response = await request(app).get('/');
+    expect(response.statusCode).toBe(200);
+  });
+
+  it('should return "Hello World!"', async () => {
+    const response = await request(app).get('/');
+    expect(response.text).toBe('Hello World!');
+  });
 });
 
-app.get('/sum/:a/:b', (req, res) => {
-  const {a, b} = req.params;
-  res.send(String(parseInt(a) + parseInt(b)));
+describe('GET /sum/:a/:b', () => {
+  it('should return the sum of two numbers', async () => {
+    const response = await request(app).get('/sum/5/3');
+    expect(response.text).toBe('8');
+  });
 });
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
-
-module.exports = app; // Export for testing
