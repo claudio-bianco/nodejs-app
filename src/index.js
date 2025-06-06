@@ -11,8 +11,8 @@ app.get('/sum/:a/:b', (req, res) => {
   res.send(String(parseInt(a) + parseInt(b)));
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
 
 module.exports = app; // Export for testing
