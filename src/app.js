@@ -10,12 +10,9 @@ app.get('/sum/:a/:b', (req, res) => {
   res.send(String(parseInt(a) + parseInt(b)));
 });
 
-app.get('/optional', (req, res) => {
-  if (false) {
-    res.send('Nunca cai aqui');
-  } else {
-    res.send('Sempre aqui');
-  }
-});
+// 👇 Adiciona lógica nunca testada:
+if (process.env.NODE_ENV === 'production-check') {
+  console.log('Este bloco nunca será testado');
+}
 
 module.exports = app; // Export for testing
