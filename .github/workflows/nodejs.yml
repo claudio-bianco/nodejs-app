@@ -124,15 +124,26 @@ jobs:
           echo "tag=$latest" >> "$GITHUB_OUTPUT"
           echo "Última tag: $latest"
 
-      - name: Resolver digest da última tag
+      - name: Resolver digest (Docker Hub) — robusto
         id: digest
         env:
-          NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE_V }}
-          IMAGE:     ${{ vars.IMAGE_NAME_V }}
-          TAG:       ${{ steps.hub.outputs.tag }}
+          NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE_V }}  # ex: seuuser
+          IMAGE:     ${{ vars.IMAGE_NAME_V }}           # ex: nodejs-app
+          TAG:       ${{ steps.hub.outputs.tag || '1.0.0' }}
         run: |
           set -euo pipefail
-          # precisa do docker CLI + buildx já presentes no runner Ubuntu
-          DIGEST=$(docker buildx imagetools inspect "docker.io/${NAMESPACE}/${IMAGE}:${TAG}" --format '{{ .Digest }}')
+          REF="docker.io/${NAMESPACE}/${IMAGE}:${TAG}"
+          # Saída “humana” contém a linha "Digest: sha256:..."
+          RAW=$(docker buildx imagetools inspect "$REF")
+          echo "$RAW" 1>&2
+          DIGEST=$(echo "$RAW" | awk -F': ' '/^Digest: /{print $2; exit}')
+          if [ -z "${DIGEST:-}" ]; then
+            echo "Não foi possível extrair o Digest de $REF" >&2
+            exit 1
+          fi
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
-          echo "Imagem imutável: docker.io/${NAMESPACE}/${IMAGE}@${DIGEST}"          
+          echo "Imagem imutável: docker.io/${NAMESPACE}/${IMAGE}@${DIGEST}"
+
+      - name: Echo Digist
+        run: |
+          echo "Digest: ${{ steps.digest.outputs.digest }}"
