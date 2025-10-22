@@ -4,14 +4,14 @@ const app = require('../src/app');
 let server;
 
 describe('API básica', () => {
-  // describe('GET /', () => {
-  //   it('deve responder 200 e "Hello World!"', async () => {
-  //     await request(app)
-  //       .get('/')
-  //       .expect('Content-Type', /text\/html|text\/plain/)
-  //       .expect(200, 'Hello World!');
-  //   });
-  // });
+  describe('GET /', () => {
+    it('deve responder 200 e "Hello World!"', async () => {
+      await request(app)
+        .get('/')
+        .expect('Content-Type', /text\/html|text\/plain/)
+        .expect(200, 'Hello World!');
+    });
+  });
 
   describe('GET /sum/:a/:b', () => {
     it('soma inteiros positivos', async () => {
