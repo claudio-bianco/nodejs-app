@@ -10,9 +10,8 @@ app.get('/sum/:a/:b', (req, res) => {
   res.send(String(parseInt(a) + parseInt(b)));
 });
 
-// 👇 Adiciona lógica nunca testada:
-if (process.env.NODE_ENV === 'production-check') {
-  console.log('Este bloco nunca será testado');
+function apenasInterno(x) {
+  return x * 2;
 }
 
 module.exports = app; // Export for testing
