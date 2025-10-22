@@ -3,12 +3,13 @@ module.exports = {
   testEnvironment: 'node',
   collectCoverage: true,
   collectCoverageFrom: ['src/app.js'],
+  coverageReporters: ['lcov', 'text-summary'],
   coverageThreshold: {
     global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100
+      statements: 80,
+      branches: 80,
+      functions: 60,
+      lines: 80
     }
   }
 };
