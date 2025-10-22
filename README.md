@@ -103,6 +103,10 @@ Relatório detalhado em HTML:
 coverage/lcov-report/index.html
 ```
 
+### 📊 Sonarcloud
+
+![Sonarcloud](docs/sonarcloud.png)
+
 * * *
 
 ## 🐳 Executar com Docker
