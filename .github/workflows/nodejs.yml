@@ -88,5 +88,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
+            ${{ env.IMAGE_NAME }}:latest            
+            ${{ env.IMAGE_NAME }}:${{ steps.pkg.outputs.version }}
