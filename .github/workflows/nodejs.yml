@@ -18,6 +18,16 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
+      - name: Ler versão do package.json
+        id: pkg
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Versão encontrada: $VERSION"
+
+      - name: Exibir versão
+        run: echo "Versão atual é ${{ steps.pkg.outputs.version }}"
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -40,25 +50,3 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-
-      # - name: Build
-      #   run: npm run build --if-present
-
-
-      # - name: Upload build artifacts
-      #   if: success()
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: build
-      #     path: build/  # Adjust the path to your build output directory if different
-
-      # - name: Add SSH key
-      #   uses: webfactory/ssh-agent@v0.8.1
-      #   with:
-      #     ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # - name: Upload to remote server
-      #   run: scp -r build/ user@yourserver:/path/to/destination
-      #   env:
-      #     SSH_KNOWN_HOSTS: ${{ secrets.SSH_HOST }}
