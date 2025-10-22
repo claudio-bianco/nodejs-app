@@ -1,0 +1,60 @@
+name: Backup
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+      name: Build, Test and Analyze
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm test
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+
+      - name: Run SonarCloud analysis
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
+      # - name: Build
+      #   run: npm run build --if-present
+
+
+      # - name: Upload build artifacts
+      #   if: success()
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: build
+      #     path: build/  # Adjust the path to your build output directory if different
+
+      # - name: Add SSH key
+      #   uses: webfactory/ssh-agent@v0.8.1
+      #   with:
+      #     ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # - name: Upload to remote server
+      #   run: scp -r build/ user@yourserver:/path/to/destination
+      #   env:
+      #     SSH_KNOWN_HOSTS: ${{ secrets.SSH_HOST }}
