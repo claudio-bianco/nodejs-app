@@ -107,8 +107,8 @@ jobs:
       - name: Obter última tag SemVer (autenticado)
         id: hub
         env:
-          NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
-          IMAGE:     ${{ vars.IMAGE_NAME }}
+          NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE_V }}
+          IMAGE:     ${{ vars.IMAGE_NAME_V }}
           TOKEN:     ${{ steps.login.outputs.token }}
         run: |
           set -euo pipefail
@@ -127,8 +127,8 @@ jobs:
       - name: Resolver digest da última tag
         id: digest
         env:
-          NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
-          IMAGE:     ${{ vars.IMAGE_NAME }}
+          NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE_V }}
+          IMAGE:     ${{ vars.IMAGE_NAME_V }}
           TAG:       ${{ steps.hub.outputs.tag }}
         run: |
           set -euo pipefail
