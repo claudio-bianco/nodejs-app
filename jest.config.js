@@ -2,7 +2,7 @@
 module.exports = {
   testEnvironment: 'node',
   collectCoverage: true,
-  collectCoverageFrom: ['app.js'],
+  collectCoverageFrom: ['src/app.js'],
   coverageThreshold: {
     global: {
       branches: 100,
