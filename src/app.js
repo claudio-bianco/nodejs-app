@@ -10,5 +10,12 @@ app.get('/sum/:a/:b', (req, res) => {
   res.send(String(parseInt(a) + parseInt(b)));
 });
 
+app.get('/optional', (req, res) => {
+  if (false) {
+    res.send('Nunca cai aqui');
+  } else {
+    res.send('Sempre aqui');
+  }
+});
 
 module.exports = app; // Export for testing
