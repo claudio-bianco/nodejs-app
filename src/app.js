@@ -10,8 +10,9 @@ app.get('/sum/:a/:b', (req, res) => {
   res.send(String(parseInt(a) + parseInt(b)));
 });
 
-function apenasInterno(x) {
-  return x * 2;
+// ⚠️ Bloco nunca testado (reduz cobertura)
+if (process.env.REDUCE_COVERAGE === 'true') {
+  console.log('Simulação: este trecho nunca será testado');
 }
 
 module.exports = app; // Export for testing
