@@ -90,3 +90,49 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:latest            
             ${{ env.IMAGE_NAME }}:${{ steps.pkg.outputs.version }}
+
+      - name: Obter JWT do Docker Hub
+        id: login
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN:    ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          token=$(curl -fsSL -X POST "https://hub.docker.com/v2/users/login/" \
+            -H "Content-Type: application/json" \
+            -d "{\"username\":\"$DOCKERHUB_USERNAME\",\"password\":\"$DOCKERHUB_TOKEN\"}" \
+            | jq -r .token)
+          echo "token=$token" >> "$GITHUB_OUTPUT"
+
+      - name: Obter última tag SemVer (autenticado)
+        id: hub
+        env:
+          NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+          IMAGE:     ${{ vars.IMAGE_NAME }}
+          TOKEN:     ${{ steps.login.outputs.token }}
+        run: |
+          set -euo pipefail
+          json=$(curl -fsSL "https://hub.docker.com/v2/repositories/${NAMESPACE}/${IMAGE}/tags?page_size=100" \
+            -H "Authorization: JWT $TOKEN")
+
+          latest=$(echo "$json" \
+            | jq -r '.results[].name' \
+            | grep -E "^[0-9]+\.[0-9]+\.[0-9]+$" \
+            | sort -V \
+            | tail -n1)
+
+          echo "tag=$latest" >> "$GITHUB_OUTPUT"
+          echo "Última tag: $latest"
+
+      - name: Resolver digest da última tag
+        id: digest
+        env:
+          NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+          IMAGE:     ${{ vars.IMAGE_NAME }}
+          TAG:       ${{ steps.hub.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # precisa do docker CLI + buildx já presentes no runner Ubuntu
+          DIGEST=$(docker buildx imagetools inspect "docker.io/${NAMESPACE}/${IMAGE}:${TAG}" --format '{{ .Digest }}')
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+          echo "Imagem imutável: docker.io/${NAMESPACE}/${IMAGE}@${DIGEST}"          
